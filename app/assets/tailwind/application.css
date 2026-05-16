@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Georgia", serif;
+  --color-accent: oklch(0.7 0.15 65);
+  --color-accent-muted: oklch(0.96 0.03 85);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply antialiased font-sans text-zinc-900;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    .animate-rise,
+    .animate-fade-in,
+    .hero-float,
+    .hero-ring-pulse {
+      animation: none !important;
+    }
+    .animate-rise {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes ring-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.75 0.12 65 / 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 6px oklch(0.75 0.12 65 / 0.08);
+  }
+}
+
+@layer components {
+  .animate-rise {
+    animation: fade-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-rise-delay-1 {
+    animation-delay: 0.1s;
+  }
+  .animate-rise-delay-2 {
+    animation-delay: 0.18s;
+  }
+  .animate-rise-delay-3 {
+    animation-delay: 0.26s;
+  }
+  .animate-rise-delay-4 {
+    animation-delay: 0.34s;
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out both;
+  }
+  .hero-float {
+    animation: soft-float 5s ease-in-out infinite;
+  }
+  .hero-ring-pulse {
+    animation: ring-glow 3.5s ease-in-out infinite;
+  }
+
+  .font-display {
+    font-family: "Fraunces", "Georgia", ui-serif, serif;
+    font-optical-sizing: auto;
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility text-pretty {
+  text-wrap: pretty;
+}

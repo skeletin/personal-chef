@@ -1,0 +1,1 @@
+Static landing + Postgres `bookings` table. Deploy on Railway with a Postgres plugin: set `SECRET_KEY_BASE` (`bin/rails secret`), `RAILS_MASTER_KEY` from `config/master.key`, and `DATABASE_URL` from Railway.
