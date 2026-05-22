@@ -14,12 +14,11 @@ Stack: Rails 8, PostgreSQL, Tailwind CSS v4. Visual system uses **Rubik** (headi
 
 Never edit shipped migrations (`db/migrate/20260515230159_create_bookings.rb` stays historical); new tables and drops are appended so `bin/rails db:migrate` stays safe on an already-deployed DB.
 
-Production after deploy:
+[`Procfile`](Procfile) **`web`** is tuned for Railway: each dyno boots with **`rails assets:precompile`**, **`db:migrate`**, **`db:seed`**, then **`puma`** (your requested start chain). **`ADMIN_USERNAME`** / **`ADMIN_PASSWORD`** must be set — seed runs every boot.
 
-```bash
-bin/rails db:migrate
-bin/rails db:seed   # creates admin user + storefront from db/seeds snapshot (see below)
-```
+If you run **multiple web replicas**, consider a single Railway **deploy / release** step for migrate + seed instead so they aren’t duplicated in parallel; then shorten `Procfile` to **`web: bundle exec puma -C config/puma.rb`** and run precompile at **build** time.
+
+You can still run **`bin/rails db:migrate`** / **`bin/rails db:seed`** manually from a shell when needed.
 
 `db:seed` **requires** `ADMIN_USERNAME` and `ADMIN_PASSWORD` in every environment (use strong values in production). Username is normalized to lowercase; passwords are bcrypt-hashed (max **72 bytes** on input).
 
