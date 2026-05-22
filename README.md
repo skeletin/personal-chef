@@ -25,12 +25,12 @@ bin/rails db:seed   # creates admin user + storefront from db/seeds snapshot (se
 
 ### Local `.env` example (development only)
 
-| Variable | Sample |
-|---------|--------|
-| `ADMIN_USERNAME` | `admin` |
+| Variable         | Sample                    |
+| ---------------- | ------------------------- |
+| `ADMIN_USERNAME` | `admin`                   |
 | `ADMIN_PASSWORD` | `changeme-strong-12-char` |
 
-It also expects **`db/seeds/storefront_snapshot.yml`** plus images in **`db/seeds/attachments/`** — commit those alongside the release. Rows are upserted by bottle **name**; by default anything in **`liquors` not listed in the snapshot is destroyed (set **`SKIP_STOREFRONT_SEED_PRUNE=true`** to keep extra rows you added manually outside the snapshot).
+It also expects **`db/seeds/storefront_snapshot.yml`** plus images in **`db/seeds/attachments/`** — commit those alongside the release. Rows are upserted by bottle **name**; by default anything in **`liquors` not listed in the snapshot is destroyed (set **`SKIP_STOREFRONT_SEED_PRUNE=true`\*\* to keep extra rows you added manually outside the snapshot).
 
 ```bash
 bin/rails runner script/export_storefront_snapshot.rb
@@ -49,10 +49,10 @@ user.save!
 
 ## Key routes
 
-| Path | Who |
-|------|-----|
-| `/` | Public inventory grid |
-| `/session/new` | Staff login |
+| Path             | Who                       |
+| ---------------- | ------------------------- |
+| `/`              | Public inventory grid     |
+| `/session/new`   | Staff login               |
 | `/admin/liquors` | CRUD (authenticated only) |
 
 ## Local workflow
@@ -65,7 +65,6 @@ bin/setup                       # bundle + db:prepare + launch bin/dev (omit --s
 bin/rails db:seed               # requires ADMIN_USERNAME and ADMIN_PASSWORD in `.env`
 bin/rails server                # if you prefer `bin/rails s` outside bin/dev / Foreman stack
 ```
-
 
 ## Operational notes
 

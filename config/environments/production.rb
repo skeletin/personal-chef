@@ -16,10 +16,10 @@ Rails.application.configure do
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
-  config.hosts << "chefboy.up.railway.app"
+  config.hosts << "liqstore.up.railway.app"
   config.require_master_key = false
 
-  public_host = ENV.fetch("RAILS_PUBLIC_HOST", "chefboy.up.railway.app")
+  public_host = ENV.fetch("RAILS_PUBLIC_HOST", "liqstore.up.railway.app")
   protocol = ENV.fetch("RAILS_PUBLIC_PROTOCOL", "https")
   config.action_mailer.default_url_options = { host: public_host, protocol: protocol }
   config.action_mailer.raise_delivery_errors = false
