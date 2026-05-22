@@ -1,0 +1,40 @@
+<%= content_for :title, "Staff sign in" %>
+
+<section class="mx-auto flex max-w-xl flex-col px-4 py-14 sm:px-6 lg:px-8">
+  <div class="animate-rise rounded-[1.6rem] border border-slate-200 bg-brand-surface p-10 shadow-xl shadow-slate-900/[0.06] ring-1 ring-slate-100">
+    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-cta">Staff only</p>
+    <h1 class="font-display mt-3 text-pretty text-3xl font-semibold tracking-tight text-brand-primary">Sign in</h1>
+    <p class="mt-2 max-w-md text-sm leading-relaxed text-brand-muted">
+      Manage liquor inventory counts and shelf prices — customers see updates on the storefront.
+    </p>
+
+    <%= form_with url: session_url, class: "mt-10 space-y-6", id: "staff-sign-in-form" do |form| %>
+      <%= form.label :username, "Username", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+      <%= form.text_field :username,
+          required: true,
+          autofocus: true,
+          autocomplete: "username",
+          placeholder: "admin",
+          value: params[:username],
+          class: "h-11 w-full cursor-text rounded-xl border border-slate-200 px-4 text-brand-primary placeholder:text-slate-400 transition-colors hover:border-slate-300 input-focus-ring" %>
+
+      <%= form.label :password, class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+      <%= form.password_field :password,
+          required: true,
+          autocomplete: "current-password",
+          placeholder: "Your password",
+          maxlength: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED,
+          class: "h-11 w-full cursor-text rounded-xl border border-slate-200 px-4 text-brand-primary placeholder:text-slate-400 transition-colors hover:border-slate-300 input-focus-ring" %>
+
+      <div class="pt-5">
+        <%= form.submit "Sign in",
+            class: "w-full cursor-pointer rounded-xl bg-sky-700 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-sky-900/25 transition-colors duration-200 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400/40 border-0 sm:w-auto" %>
+      </div>
+    <% end %>
+
+    <p class="mt-10 border-t border-slate-100 pt-8 text-center text-sm">
+      <%= link_to "Back to storefront", root_path,
+          class: "cursor-pointer font-semibold text-brand-cta underline underline-offset-4 hover:text-sky-900" %>
+    </p>
+  </div>
+</section>

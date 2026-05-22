@@ -18,4 +18,29 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [ :id ]
   config.hosts << "chefboy.up.railway.app"
   config.require_master_key = false
+
+  public_host = ENV.fetch("RAILS_PUBLIC_HOST", "chefboy.up.railway.app")
+  protocol = ENV.fetch("RAILS_PUBLIC_PROTOCOL", "https")
+  config.action_mailer.default_url_options = { host: public_host, protocol: protocol }
+  config.action_mailer.raise_delivery_errors = false
+
+  if (smtp_address = ENV["SMTP_ADDRESS"]).present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.perform_deliveries = true
+    smtp = {
+      address: smtp_address,
+      port: ENV.fetch("SMTP_PORT", "587").to_i,
+      enable_starttls_auto: ENV.fetch("SMTP_ENABLE_STARTTLS_AUTO", "true") == "true"
+    }
+    if ENV["SMTP_USER_NAME"].present?
+      smtp[:user_name] = ENV["SMTP_USER_NAME"]
+      smtp[:password] = ENV["SMTP_PASSWORD"]
+      smtp[:authentication] = ENV["SMTP_AUTH"].presence&.to_sym || :plain
+    end
+    config.action_mailer.smtp_settings = smtp
+  else
+    config.action_mailer.perform_deliveries = false
+  end
+
+  config.active_storage.service = :production
 end

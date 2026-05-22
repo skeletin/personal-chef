@@ -1,0 +1,17 @@
+<%= content_for :title, "Edit #{@liquor.name} — Admin" %>
+<div class="animate-rise pb-10">
+  <h1 class="font-display text-2xl font-semibold tracking-tight text-brand-primary sm:text-3xl">Edit <%= @liquor.name %></h1>
+  <div class="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <%= link_to "Back to shelf", admin_liquors_path,
+        class: "cursor-pointer font-semibold text-brand-cta underline-offset-4 hover:text-sky-900 hover:underline" %>
+    <% confirm_msg = "Remove #{@liquor.name} permanently?" %>
+    <%= button_to "Remove this item",
+        admin_liquor_path(@liquor),
+        method: :delete,
+        form_class: "inline",
+        onclick: "return confirm(#{confirm_msg.to_json})",
+        class: "cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-4 hover:text-red-900" %>
+  </div>
+</div>
+
+<%= render "form", liquor: @liquor %>

@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title><%= content_for?(:title) ? yield(:title) : "Inventory — Spirits in stock" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "Admin — Liquor inventory" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#f8fafc">
-    <meta name="description" content="Browse our current liquor selection, stock levels, and prices.">
+    <meta name="robots" content="noindex, nofollow">
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag "tailwind", media: "all" %>
-    <%= yield :head %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
   </head>
 
-  <body class="min-h-screen bg-brand-bg bg-[radial-gradient(ellipse_120%_80%_at_50%_-18%,rgba(3,105,161,0.08),transparent)]">
-    <%= render "layouts/flash" %>
-    <%= yield %>
+  <body class="min-h-screen bg-brand-bg">
+    <%= render "layouts/admin_flash" %>
+    <%= render "layouts/admin_header" %>
+    <main class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 lg:pb-14">
+      <%= yield %>
+    </main>
   </body>
 </html>

@@ -1,0 +1,77 @@
+<%= content_for :title, "Admin — Liquor inventory" %>
+
+<div class="flex flex-wrap items-start justify-between gap-4 animate-rise pb-10">
+  <div>
+    <h1 class="font-display text-2xl font-semibold tracking-tight text-brand-primary sm:text-3xl">
+      Liquor shelf
+    </h1>
+    <p class="mt-2 max-w-xl text-sm leading-relaxed text-brand-muted">
+      Add bottles, photos, tweak counts — the public storefront pulls from here.
+    </p>
+  </div>
+  <%= link_to new_admin_liquor_path,
+      class: "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-xl bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-sky-900/15 transition-colors duration-200 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400/40" do %>
+    Add liquor
+  <% end %>
+</div>
+
+<% if @liquors.empty? %>
+  <div class="animate-rise-delay-1 animate-rise rounded-[1.5rem] border border-dashed border-slate-300 bg-slate-50/70 p-14 text-center">
+    <p class="font-display text-lg font-semibold text-brand-primary">No listings yet</p>
+    <p class="mt-2 text-sm text-brand-muted">Start by adding your first bottle to the shelf.</p>
+    <%= link_to "Add liquor", new_admin_liquor_path,
+        class: "mt-6 inline-flex cursor-pointer text-sm font-semibold text-brand-cta underline decoration-sky-400/55 decoration-2 underline-offset-4 hover:text-sky-900" %>
+  </div>
+<% else %>
+  <div class="animate-rise-delay-1 animate-rise overflow-x-auto rounded-2xl border border-slate-200 bg-brand-surface shadow-lg shadow-slate-900/[0.04] ring-1 ring-slate-100">
+    <table class="min-w-full text-left text-sm">
+      <caption class="sr-only">Admin liquor list</caption>
+      <thead class="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wider text-brand-muted">
+        <tr>
+          <th scope="col" class="px-5 py-3.5 lg:px-6">Photo</th>
+          <th scope="col" class="px-3 py-3.5">Item</th>
+          <th scope="col" class="px-3 py-3.5">Category</th>
+          <th scope="col" class="px-3 py-3.5 whitespace-nowrap">Qty</th>
+          <th scope="col" class="px-3 py-3.5 text-right tabular-nums whitespace-nowrap">Shelf ~</th>
+          <th scope="col" class="px-3 py-3.5 text-right whitespace-nowrap">Price</th>
+          <th scope="col" class="px-5 py-3.5 text-right whitespace-nowrap lg:px-6">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% @liquors.each do |liquor| %>
+          <tr class="transition-colors duration-150 hover:bg-sky-50/35">
+            <td class="align-middle min-w-0 px-5 py-2 lg:w-20 lg:px-6">
+              <%= render "liquors/liquor_photo_thumb", liquor:, layout: :table %>
+            </td>
+            <th scope="row" class="px-3 py-4 font-semibold text-brand-primary">
+              <%= link_to liquor.name, edit_admin_liquor_path(liquor),
+                  class: "cursor-pointer text-brand-primary underline-offset-4 hover:text-sky-900 hover:underline decoration-sky-600/35" %>
+            </th>
+            <td class="px-3 py-4 text-brand-muted"><%= liquor.category.presence || "—" %></td>
+            <td class="px-3 py-4 tabular-nums">
+              <%= liquor.quantity %>
+            </td>
+            <td class="px-3 py-4 text-right tabular-nums text-brand-muted">
+              <%= liquor.typical_store_price.present? ? number_to_currency(liquor.typical_store_price) : tag.span("—", class: "text-slate-400") %>
+            </td>
+            <td class="px-3 py-4 text-right font-medium tabular-nums text-brand-primary">
+              <%= number_to_currency liquor.price %>
+            </td>
+            <td class="px-5 py-4 text-right lg:px-6">
+              <%= link_to "Edit", edit_admin_liquor_path(liquor),
+                  class: "cursor-pointer text-sm font-semibold text-brand-cta underline-offset-4 hover:text-sky-900 hover:underline" %>
+              <span class="mx-2 text-slate-300" aria-hidden="true">•</span>
+              <% confirm_msg = "Remove #{liquor.name} from inventory?" %>
+              <%= button_to "Remove",
+                  admin_liquor_path(liquor),
+                  method: :delete,
+                  form_class: "inline",
+                  onclick: "return confirm(#{confirm_msg.to_json})",
+                  class: "cursor-pointer rounded-lg border border-red-100 bg-transparent p-0 text-sm font-semibold text-red-700 underline-offset-4 transition-colors duration-200 hover:bg-red-50 hover:text-red-900 hover:underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

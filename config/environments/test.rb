@@ -8,4 +8,7 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
   config.active_support.deprecation = :stderr
   config.action_controller.raise_on_missing_callback_actions = true
+  config.action_mailer.default_url_options = { host: "localhost" }
+
+  config.active_storage.service = :test
 end

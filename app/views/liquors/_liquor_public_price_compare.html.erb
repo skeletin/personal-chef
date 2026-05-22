@@ -1,0 +1,57 @@
+<%#
+  Curated shelf benchmark for shoppers (optional typical price, note, outbound link).
+
+  locals: liquor (Liquor), layout: :table | :card
+%>
+<% return unless liquor.comparison_public_visible? %>
+
+<% layout = local_assigns.fetch(:layout, :card).to_sym %>
+<% outer = layout == :card ? "px-5 pb-3" : "" %>
+<% block_class = layout == :table ? "mt-1.5 space-y-1 text-xs leading-snug lg:text-[0.8125rem]" : "mt-0 space-y-1.5 text-sm leading-snug" %>
+<% classes = [ block_class, outer ].reject(&:blank?).join(" ") %>
+
+<div class="<%= classes %>">
+  <% if liquor.typical_store_price.present? %>
+    <% bench_d = liquor.typical_store_price.to_d %>
+    <% delta = liquor.shelf_savings_vs_typical %>
+    <p class="tabular-nums text-brand-muted">
+      <span class="font-medium text-slate-700">Typical shelf</span>
+      ~ <%= number_to_currency bench_d %>
+      <% if liquor.comparison_url.present? %>
+        &nbsp;&middot;
+        <%= link_to "Verify listing",
+            liquor.comparison_url,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            class: "cursor-pointer font-semibold text-brand-cta underline decoration-sky-500/40 underline-offset-2 hover:text-sky-900" %>
+      <% end %>
+    </p>
+
+    <% if delta.present? %>
+      <% if delta.positive? %>
+        <p class="font-semibold text-emerald-900">
+          ~ <%= number_to_currency delta %> under this benchmark
+        </p>
+      <% elsif delta.negative? %>
+        <p class="text-amber-950">
+          ~ <%= number_to_currency delta.abs %> above this benchmark (check bottle size / promos).
+        </p>
+      <% else %>
+        <p class="text-brand-muted">Lines up with ~<%= number_to_currency bench_d %> benchmark.</p>
+      <% end %>
+    <% end %>
+  <% elsif liquor.comparison_url.present? %>
+    <p>
+      <%= link_to "Open shelf listing to compare",
+          liquor.comparison_url,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          class: "cursor-pointer font-semibold text-brand-cta underline decoration-sky-500/40 underline-offset-2 hover:text-sky-900" %>
+      <span class="text-brand-muted"> (new tab)</span>
+    </p>
+  <% end %>
+
+  <% if liquor.comparison_note.present? %>
+    <p class="text-brand-muted <%= layout == :table ? "max-w-[18rem]" : "" %>"><%= liquor.comparison_note %></p>
+  <% end %>
+</div>

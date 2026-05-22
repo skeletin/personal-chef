@@ -1,0 +1,17 @@
+<nav class="border-b border-slate-200/90 bg-brand-surface/90 backdrop-blur-sm">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+    <span class="font-display text-lg font-semibold tracking-tight text-brand-primary">
+      Spirits in stock
+    </span>
+    <div class="flex shrink-0 items-center gap-2">
+      <%= link_to "Staff sign in",
+          new_session_path,
+          class: "cursor-pointer rounded-xl bg-sky-700 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-sky-800" %>
+      <% if authenticated? %>
+        <%= link_to "Inventory admin",
+            admin_liquors_path,
+            class: "cursor-pointer rounded-xl border border-slate-300 bg-brand-surface px-3 py-2 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:border-sky-700/35 hover:bg-slate-50" %>
+      <% end %>
+    </div>
+  </div>
+</nav>

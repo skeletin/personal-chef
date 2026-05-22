@@ -1,0 +1,26 @@
+# Auto-generated snapshot of storefront inventory (Liquor rows + filenames into db/seeds/attachments).
+# Regenerate after changing dev data:
+#   bin/rails runner script/export_storefront_snapshot.rb
+---
+liquors:
+- name: Angels Envy - Kentucky Straight Bourbon Whiskey
+  quantity: 2
+  price: '25.00'
+  attachment: angels-envy-kentucky-straight-bourbon-whiskey.jpg
+  category: Bourbon
+  typical_store_price: '50.00'
+  comparison_url: https://www.jewelosco.com/shop/product-details.960080976.html?productId=960080976&CMPID=organic_jwo_all_surf_goo_20220629&psrc=g
+- name: Jon Basil Tequila
+  quantity: 2
+  price: '25.00'
+  attachment: jon-basil-tequila.jpg
+  category: Repasado
+  typical_store_price: '50.00'
+  comparison_url: https://www.captainjacksbev.com/product/s-11757/p-18227498/buy-jon-basil-tequila-reposado
+- name: Knob Creek - SMOKED MAPLE
+  quantity: 1
+  price: '15.00'
+  attachment: knob-creek-smoked-maple.jpg
+  category: Bourbon
+  typical_store_price: '35.00'
+  comparison_url: https://www.topsidewinespirits.com/product/s-12060/p-22130067/buy-knob-creek-smoked-maple-small-batch-90p

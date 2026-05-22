@@ -1,0 +1,144 @@
+<% if liquor.errors.any? %>
+  <div
+    role="alert"
+    aria-live="assertive"
+    class="animate-fade-in mx-auto mb-8 max-w-2xl rounded-2xl border border-red-200 bg-red-50/95 px-4 py-4 text-sm text-red-950 shadow-lg shadow-red-900/10 ring-1 ring-red-100"
+  >
+    <p class="font-semibold">Couldn&apos;t save — please review.</p>
+    <ul class="mt-3 list-disc space-y-1.5 ps-6 marker:text-red-400">
+      <% liquor.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: [:admin, liquor],
+      html: {
+        multipart: true,
+        class: "mx-auto max-w-2xl space-y-7 rounded-[1.5rem] border border-slate-200 bg-brand-surface p-8 shadow-xl shadow-slate-900/[0.04] ring-1 ring-slate-100 animate-rise-delay-1 animate-rise"
+      } do |f| %>
+  <div>
+    <%= f.label :name, class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+    <%= f.text_field :name,
+        required: true,
+        autocomplete: "off",
+        class: "h-11 w-full cursor-text rounded-xl border px-4 text-base text-brand-primary transition-colors duration-150 input-focus-ring #{ liquor.errors[:name].present? ? 'border-red-400 ring-1 ring-red-200' : 'border-slate-200 hover:border-slate-300' }",
+        aria: liquor.errors[:name].present? ? { invalid: true, describedby: "liquor-name-error" } : {} %>
+    <% if liquor.errors[:name].any? %>
+      <span id="liquor-name-error" class="mt-1.5 block text-xs font-medium text-red-600"><%= liquor.errors[:name].first %></span>
+    <% end %>
+  </div>
+
+  <div class="grid gap-7 sm:grid-cols-2">
+    <div>
+      <%= f.label :quantity, "Quantity on hand", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+      <%= f.number_field :quantity, min: 0, step: 1, required: true,
+          class: "h-11 w-full cursor-text rounded-xl border border-slate-200 px-3 text-base tabular-nums text-brand-primary transition-colors duration-150 hover:border-slate-300 input-focus-ring" %>
+    </div>
+    <div>
+      <%= f.label :price, "Price (USD)", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+      <%= f.number_field :price, min: 0, step: 0.01, required: true,
+          value: (liquor.price.present? ? format("%.2f", liquor.price.to_f) : ""),
+          class: "h-11 w-full cursor-text rounded-xl border border-slate-200 px-3 text-base tabular-nums text-brand-primary transition-colors duration-150 hover:border-slate-300 input-focus-ring" %>
+      <span class="mt-1 block text-[0.6875rem] text-brand-muted">Shown on the public page with <%= number_to_currency 0 %> style formatting.</span>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :category, "Category (optional)", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+    <%= f.text_field :category, autocomplete: "off",
+        placeholder: "e.g. bourbon, rye, Scotch",
+        class: "h-11 w-full cursor-text rounded-xl border border-slate-200 px-4 text-brand-primary transition-colors duration-150 hover:border-slate-300 input-focus-ring" %>
+  </div>
+
+  <div class="rounded-2xl border border-sky-900/10 bg-gradient-to-br from-slate-50/95 to-white p-7 ring-1 ring-sky-800/15">
+    <h2 class="font-display text-lg font-semibold text-brand-primary">Shelf benchmark (optional)</h2>
+    <p class="mt-2 text-sm leading-relaxed text-brand-muted">
+      Your storefront price stays what people pay you. Use this only when you want to quote a credible &ldquo;typical liquor-store shelf&rdquo; baseline you maintain yourself (not scraped live pricing).
+    </p>
+
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <div>
+        <%= f.label :typical_store_price, "Typical shelf price (USD)", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+        <%= f.number_field :typical_store_price, min: 0, step: 0.01,
+            value: (liquor.typical_store_price.present? ? format("%.2f", liquor.typical_store_price.to_f) : ""),
+            aria: liquor.errors[:typical_store_price].present? ? { invalid: true } : {},
+            placeholder: "e.g. rounded price you see at chains nearby",
+            class: "h-11 w-full cursor-text rounded-xl border px-3 text-base tabular-nums text-brand-primary transition-colors duration-150 input-focus-ring #{ liquor.errors[:typical_store_price].present? ? 'border-red-400 ring-1 ring-red-200' : 'border-slate-200 hover:border-slate-300' }" %>
+        <% if liquor.errors[:typical_store_price].any? %>
+          <span class="mt-1.5 block text-xs font-medium text-red-600"><%= liquor.errors[:typical_store_price].first %></span>
+        <% end %>
+        <span class="mt-1 block text-[0.6875rem] text-brand-muted">Leave blank if you aren&apos;t sure.</span>
+      </div>
+      <div>
+        <%= f.label :comparison_url, "Link to shelf listing (optional)", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+        <%= f.url_field :comparison_url,
+            placeholder: "https://…",
+            spellcheck: false,
+            maxlength: Liquor::COMPARISON_URL_MAX,
+            autocomplete: "off",
+            class: "h-11 w-full cursor-text rounded-xl border px-4 text-brand-primary transition-colors duration-150 border-slate-200 hover:border-slate-300 input-focus-ring #{ liquor.errors[:comparison_url].present? ? 'border-red-400 ring-1 ring-red-200' : '' }" %>
+        <% if liquor.errors[:comparison_url].any? %>
+          <span class="mt-1.5 block text-xs font-medium text-red-600"><%= liquor.errors[:comparison_url].first %></span>
+        <% end %>
+        <span class="mt-1 block text-[0.6875rem] text-brand-muted">Opens in a new tab for shoppers who want to double-check.</span>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <%= f.label :comparison_note, "Short note shown to shoppers", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+      <%= f.text_area :comparison_note,
+          rows: 2,
+          maxlength: Liquor::COMPARISON_NOTE_MAX,
+          placeholder: "Where / month this baseline is from • same bottle size, etc.",
+          class: "min-h-[4.5rem] w-full resize-y cursor-text rounded-xl border border-slate-200 px-4 py-3 text-brand-primary transition-colors duration-150 hover:border-slate-300 input-focus-ring #{ liquor.errors[:comparison_note].present? ? 'border-red-400 ring-1 ring-red-200' : '' }" %>
+      <% if liquor.errors[:comparison_note].any? %>
+        <span class="mt-1.5 block text-xs font-medium text-red-600"><%= liquor.errors[:comparison_note].first %></span>
+      <% end %>
+      <span class="mt-1 block text-[0.6875rem] tabular-nums text-brand-muted">Max <%= Liquor::COMPARISON_NOTE_MAX %> characters · shown verbatim on the storefront.</span>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :photo, "Bottle photo (optional)", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+    <%= f.file_field :photo,
+        accept: "image/jpeg,image/png,image/webp",
+        class: "cursor-pointer block w-full text-sm text-brand-primary file:mr-4 file:inline-flex file:cursor-pointer file:rounded-lg file:border-0 file:bg-sky-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-cta hover:file:bg-sky-100",
+        aria: liquor.errors[:photo].present? ? { invalid: true, describedby: "liquor-photo-help" } : { describedby: "liquor-photo-help" } %>
+    <p id="liquor-photo-help" class="mt-2 text-[0.6875rem] leading-relaxed text-brand-muted">
+      <%= ActiveSupport::NumberHelper.number_to_human_size(Liquor::PHOTO_MAX_SIZE) %> maximum. Tall photos are cropped to a fixed storefront banner — center your bottle in-frame for best results.
+    </p>
+
+    <% if liquor.photo.attached? %>
+      <div class="mt-5 flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:flex-row sm:items-start">
+        <div class="relative h-24 max-h-24 w-full max-w-xs shrink-0 overflow-hidden rounded-lg bg-white ring-1 ring-slate-200 min-h-0 sm:h-28 sm:max-h-28 sm:max-w-sm" role="presentation">
+          <%= tag.img(
+                src: url_for(liquor.photo),
+                class: "absolute inset-0 z-0 h-full w-full object-cover object-center",
+                alt: "Current storefront photo preview for #{liquor.name}.",
+                decoding: "async"
+              ) %>
+        </div>
+        <label class="flex cursor-pointer items-start gap-2 text-sm leading-snug text-brand-muted hover:text-brand-primary">
+          <%= check_box_tag "liquor[remove_photo]", "1", false, class: "mt-1 size-4 shrink-0 cursor-pointer rounded border-slate-400 text-brand-cta focus:ring-sky-500/40" %>
+          <span>Remove current photo (save to apply).</span>
+        </label>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :notes, "Internal notes (optional)", class: "mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-brand-muted" %>
+    <%= f.text_area :notes, rows: 3,
+        placeholder: "Batch codes, reorder notes — not shown to customers.",
+        class: "min-h-[5.5rem] w-full resize-y cursor-text rounded-xl border border-slate-200 px-4 py-3 text-brand-primary transition-colors duration-150 hover:border-slate-300 input-focus-ring" %>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4 pt-4">
+    <%= f.submit (liquor.new_record? ? "Add to shelf" : "Save changes"),
+        class: "cursor-pointer rounded-xl bg-sky-700 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-sky-900/20 transition-colors duration-200 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-400/40 border-0" %>
+    <%= link_to "Cancel", admin_liquors_path,
+        class: "cursor-pointer text-sm font-semibold text-brand-muted underline underline-offset-4 transition-colors hover:text-brand-primary" %>
+  </div>
+<% end %>

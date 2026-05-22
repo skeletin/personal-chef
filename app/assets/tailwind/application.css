@@ -1,29 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces", "Georgia", serif;
-  --color-accent: oklch(0.7 0.15 65);
-  --color-accent-muted: oklch(0.96 0.03 85);
+  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Rubik", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-bg: #f8fafc;
+  --color-brand-surface: #ffffff;
+  --color-brand-primary: #0f172a;
+  --color-brand-muted: #334155;
+  --color-brand-cta: #0369a1;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
   }
+
   body {
-    @apply antialiased font-sans text-zinc-900;
+    @apply antialiased font-sans text-slate-900;
+    background-color: var(--color-brand-bg);
   }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+
     .animate-rise,
-    .animate-fade-in,
-    .hero-float,
-    .hero-ring-pulse {
+    .animate-fade-in {
       animation: none !important;
     }
+
     .animate-rise {
       opacity: 1;
       transform: none;
@@ -36,6 +42,7 @@
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -46,60 +53,46 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
-@keyframes soft-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-@keyframes ring-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 oklch(0.75 0.12 65 / 0.25);
-  }
-  50% {
-    box-shadow: 0 0 0 6px oklch(0.75 0.12 65 / 0.08);
-  }
-}
-
 @layer components {
+  /* Native modal backdrop (Tailwind backdrop: utilities target filter, not ::backdrop). */
+  .liquor-photo-lightbox-dialog::backdrop {
+    background-color: rgb(2 6 23 / 0.78);
+  }
+
   .animate-rise {
-    animation: fade-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: fade-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+
   .animate-rise-delay-1 {
-    animation-delay: 0.1s;
+    animation-delay: 0.08s;
   }
+
   .animate-rise-delay-2 {
-    animation-delay: 0.18s;
+    animation-delay: 0.16s;
   }
+
   .animate-rise-delay-3 {
-    animation-delay: 0.26s;
+    animation-delay: 0.24s;
   }
-  .animate-rise-delay-4 {
-    animation-delay: 0.34s;
-  }
+
   .animate-fade-in {
-    animation: fade-in 0.5s ease-out both;
-  }
-  .hero-float {
-    animation: soft-float 5s ease-in-out infinite;
-  }
-  .hero-ring-pulse {
-    animation: ring-glow 3.5s ease-in-out infinite;
+    animation: fade-in 0.45s ease-out both;
   }
 
   .font-display {
-    font-family: "Fraunces", "Georgia", ui-serif, serif;
-    font-optical-sizing: auto;
+    font-family:
+      var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Focus ring aligned with sky CTA for keyboard users */
+  .input-focus-ring {
+    @apply focus:border-sky-600/70 focus:outline-none focus:ring-2 focus:ring-sky-400/35;
   }
 }
 

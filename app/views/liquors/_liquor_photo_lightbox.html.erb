@@ -1,0 +1,20 @@
+<dialog id="liquor-photo-lightbox" aria-modal="true" aria-labelledby="liquor-photo-lightbox-title" lang="en" class="liquor-photo-lightbox-dialog fixed inset-0 z-[100] m-0 box-border [&:open]:flex [&:open]:max-h-none [&:open]:min-h-[100dvh] [&:open]:w-full [&:open]:max-w-none [&:open]:flex-col [&:open]:items-center [&:open]:justify-center [&:open]:overflow-y-auto [&:open]:overscroll-none [&:open]:border-0 [&:open]:bg-transparent [&:open]:p-3 [&:open]:shadow-none [&:open]:outline-none [&:open]:ring-0 [&:open]:sm:p-8">
+  <div data-photo-lightbox-panel class="relative w-full max-w-[min(56rem,calc(100vw-1.25rem))] rounded-2xl bg-slate-900/96 px-4 pb-4 pt-3 shadow-2xl ring-1 ring-white/12 sm:p-5 sm:pt-5">
+    <form method="dialog" class="mb-3 flex justify-end sm:absolute sm:right-5 sm:top-4 sm:z-10 sm:mb-0">
+      <%= button_tag "Close",
+          type: "submit",
+          class: "inline-flex cursor-pointer items-center justify-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors duration-150 hover:bg-white/20 focus:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900",
+          data: { photo_lightbox_close: true },
+          aria: { label: "Close full photo" } %>
+    </form>
+    <p id="liquor-photo-lightbox-title" class="mb-2 truncate text-center text-sm font-semibold text-white"></p>
+    <%= tag.img(
+          src: "",
+          alt: "",
+          class: "mx-auto mt-12 block max-h-[calc(100dvh-12rem)] w-auto max-w-full rounded-lg object-contain sm:mt-0 sm:max-h-[calc(100dvh-9rem)]",
+          data: { photo_lightbox_image: true },
+          decoding: "async"
+        ) %>
+    <p class="mt-3 text-center text-xs text-slate-400">Tap outside the inset or tap Close — Escape closes too.</p>
+  </div>
+</dialog>
