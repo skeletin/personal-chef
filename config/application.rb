@@ -17,5 +17,7 @@ module StreetChefRails
     config.autoload_lib(ignore: %w[assets tasks])
     config.generators.system_tests = nil
     config.active_job.queue_adapter = :async
+    # No image_processing/Vips gem in Docker — thumbnails use uploaded originals + CSS clipping.
+    config.active_storage.variant_processor = :disabled
   end
 end

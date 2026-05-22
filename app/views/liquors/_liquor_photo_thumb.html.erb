@@ -1,21 +1,25 @@
 <%# locals: liquor (Liquor), layout: :table (default) or :card, expandable: false %>
-
 <% expandable = !!local_assigns.fetch(:expandable, false) %>
 <% variant = local_assigns.fetch(:layout, :table).to_sym %>
 <% placeholder_label = "No bottle photo for #{liquor.name}" %>
 <% blob_src = (liquor.photo.attached? ? url_for(liquor.photo) : nil) %>
 <% enlarge_aria = { label: "View full-size #{liquor.name} photo", haspopup: "dialog", controls: "liquor-photo-lightbox" } %>
 
+<%#
+  Mobile storefront cards (:card): taller strip, subtle studio-style backdrop, object-contain so bottles read clearly.
+  Table strip stays compact landscape crop (:table).
+%>
 <% thumb_classes_card = [
-     "relative h-[4.5rem] max-h-[4.5rem] w-full shrink-0 overflow-hidden bg-slate-100 min-h-0",
-     "ring-1 ring-inset ring-slate-100/80 sm:h-20 sm:max-h-20 md:h-24 md:max-h-24"
+     "relative flex min-h-[12.5rem] w-full shrink-0 items-center justify-center",
+     "overflow-hidden rounded-t-2xl bg-gradient-to-b from-slate-100 via-white to-slate-50 p-5 sm:min-h-[11rem] sm:p-4",
+     "ring-1 ring-inset ring-slate-200/90 shadow-[inset_0_1px_3px_rgba(15,23,42,0.06)]"
    ].join(" ") %>
 <% thumb_classes_inline = [
      "relative size-12 max-h-12 max-w-12 shrink-0 overflow-hidden rounded-md bg-slate-100 min-h-0 min-w-0",
      "ring-1 ring-slate-200 sm:size-14 sm:max-h-14 sm:max-w-14"
    ].join(" ") %>
 <% img_src = blob_src %>
-<% img_inner = lambda do %>
+<% table_img = lambda do %>
   <%= tag.img(
         src: img_src,
         class: "pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center transition-opacity duration-200",
@@ -24,41 +28,50 @@
         loading: "lazy"
       ) %>
 <% end %>
-<% expandable_btn_styles = [
-     "appearance-none outline-none shadow-none bg-slate-100 text-left cursor-pointer touch-manipulation",
-     "transition-[filter] duration-150 hover:brightness-[0.98] active:brightness-[0.94]",
-     "focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+<% card_img = lambda do %>
+  <%= tag.img(
+        src: blob_src,
+        class: "pointer-events-none z-10 max-h-[min(62vw,14rem)] w-auto max-w-full select-none object-contain object-center rounded-md shadow-[0_8px_30px_-12px_rgba(15,23,42,0.35)] ring-1 ring-black/[0.04] transition-opacity duration-200 sm:max-h-[min(52vw,12.5rem)]",
+        alt: "Photo of #{liquor.name} bottle.",
+        decoding: "async",
+        loading: "lazy"
+      ) %>
+<% end %>
+<% expandable_btn_reset = [
+     "appearance-none border-0 outline-none shadow-none bg-transparent text-left cursor-pointer touch-manipulation",
+     "transition-[filter] duration-150 hover:brightness-[0.99] active:brightness-[0.96]",
+     "focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-surface"
    ].join(" ") %>
 
 <% if blob_src.present? && variant == :card %>
   <% if expandable %>
     <%= tag.button(
           type: "button",
-          class: "#{thumb_classes_card} #{expandable_btn_styles}",
+          class: "#{thumb_classes_card} #{expandable_btn_reset}",
           aria: enlarge_aria,
           data: { photo_lightbox_src: blob_src, photo_lightbox_name: liquor.name }
         ) do %>
-      <% img_inner.call %>
+      <% card_img.call %>
     <% end %>
   <% else %>
-    <div class="<%= thumb_classes_card %>" role="presentation"><% img_inner.call %></div>
+    <div class="<%= thumb_classes_card %>" role="presentation"><% card_img.call %></div>
   <% end %>
 <% elsif blob_src.present? %>
   <% if expandable %>
     <%= tag.button(
           type: "button",
-          class: "#{thumb_classes_inline} #{expandable_btn_styles}",
+          class: "#{thumb_classes_inline} #{expandable_btn_reset} bg-slate-100 hover:brightness-[0.98]",
           aria: enlarge_aria,
           data: { photo_lightbox_src: blob_src, photo_lightbox_name: liquor.name }
         ) do %>
-      <% img_inner.call %>
+      <% table_img.call %>
     <% end %>
   <% else %>
-    <div class="<%= thumb_classes_inline %>" role="presentation"><% img_inner.call %></div>
+    <div class="<%= thumb_classes_inline %>" role="presentation"><% table_img.call %></div>
   <% end %>
 <% elsif variant == :card %>
-  <div class="flex h-[4.5rem] max-h-[4.5rem] w-full shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-slate-100 to-slate-50 ring-1 ring-inset ring-slate-100/80 sm:h-20 sm:max-h-20 md:h-24 md:max-h-24" role="img" aria-label="<%= placeholder_label %>">
-    <svg class="size-9 text-slate-300 md:size-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
+  <div class="flex min-h-[12.5rem] w-full shrink-0 flex-col items-center justify-center rounded-t-2xl bg-gradient-to-br from-slate-100 via-slate-50/90 to-white p-8 ring-1 ring-inset ring-slate-200/90 shadow-[inset_0_1px_3px_rgba(15,23,42,0.05)] sm:min-h-[11rem]" role="img" aria-label="<%= placeholder_label %>">
+    <svg class="size-12 text-slate-300 sm:size-14" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3A1.5 1.5 0 0 0 1.5 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
     </svg>
   </div>

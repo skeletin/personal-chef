@@ -8,7 +8,7 @@ Stack: Rails 8, PostgreSQL, Tailwind CSS v4. Visual system uses **Rubik** (headi
 
 - Ruby 3.4+
 - PostgreSQL
-- Env: `DATABASE_URL` (production), `SECRET_KEY_BASE`
+- Env: `DATABASE_URL` (production), `SECRET_KEY_BASE`, and optional **`ACTIVE_STORAGE_ROOT`** — set this to your persisted volume mount when it is **not** `…/storage` inside the app (e.g. mount **`/data`** → **`ACTIVE_STORAGE_ROOT=/data`**)
 
 ## Deploy / migrations
 
@@ -71,7 +71,7 @@ bin/rails server                # if you prefer `bin/rails s` outside bin/dev / 
 
 - **Storefront snapshots:** Checked-in **`db/seeds/storefront_snapshot.yml`** + **`db/seeds/attachments/`** recreate your dev shelf in other environments (`bin/rails db:seed`).
 - **Shelf benchmarks (optional):** On each bottle, staff can set a **typical liquor-store shelf price**, optional **https link** to a listing shoppers can open, and a **short note**. The public inventory shows this under your selling price (manual curation — not auto-scraped “live every retailer” pricing).
-- **Liquor photos (Active Storage):** Admins attach one storefront image per item (JPEG / PNG / Webp, capped in app). Uploads default to **`Rails.root/storage`** via [`config/storage.yml`](config/storage.yml). Railway-style hosts usually have an **ephemeral** disk — files can disappear on redeploy unless you mount a **persistent volume** over `storage/` or switch **`production`** in `storage.yml` to **S3-compatible** object storage (R2, S3, etc.).
+- **Liquor photos (Active Storage):** Admins attach one storefront image per item (JPEG / PNG / Webp, capped in app). In production, Disk **`root`** is **`ENV["ACTIVE_STORAGE_ROOT"]`**, falling back to **`Rails.root/storage`** ([`config/storage.yml`](config/storage.yml)). Railway: if your volume mounts at **`/data`**, set **`ACTIVE_STORAGE_ROOT=/data`** on the web service — otherwise uploads still go under the ephemeral app tree. Alternative: **S3/R2** for multi-instance / CDN.
 - **Bookings retired:** the legacy `bookings` table was dropped via a forward-only migration (`DropBookings`); back up/export first if production data matters.
 - **`/me.PNG` hero:** that chef portrait is gone; replace branding via layout + Tailwind `@theme`.
 - **`/up`** health check remains wired for Railway.

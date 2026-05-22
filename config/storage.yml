@@ -5,3 +5,11 @@ test:
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
+
+# Matches `config.active_storage.service = :production` in production.rb.
+#
+# Railway / Docker: attach a persistent volume and set ACTIVE_STORAGE_ROOT to its mount path, e.g. /data
+# (Rails default Disk root is <%= Rails.root.join("storage").to_s %> unless you override).
+production:
+  service: Disk
+  root: <%= ENV.fetch("ACTIVE_STORAGE_ROOT") { Rails.root.join("storage").to_s } %>
